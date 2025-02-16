@@ -18,7 +18,7 @@ export type MinePosition = `${number},${number}`;
 type MinefieldState = {
   levelConfig: LevelConfig;
   mines: Set<`${number},${number}`>;
-  borad: Board;
+  board: Board;
 };
 
 const generateMines = ({
@@ -74,9 +74,11 @@ const initialState: MinefieldState = (() => {
   return {
     levelConfig: { levelType: "beginner", ...levelConfig.beginner },
     mines: generateMines({ levelType: "beginner", ...levelConfig.beginner }),
-    borad: board,
+    board,
   };
 })();
+
+console.log('initialState', initialState);
 
 const minefieldSlice = createSlice({
   name: "minefield",
@@ -89,7 +91,7 @@ const minefieldSlice = createSlice({
 
       state.levelConfig = { levelType, row, col, numsOfMine };
       state.mines = mines;
-      state.borad = board;
+      state.board = board;
     },
   },
 });
