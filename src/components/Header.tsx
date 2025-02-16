@@ -41,7 +41,7 @@ export default function Header() {
       <div className="flex w-full items-center justify-between text-3xl">
         <div>깃발 개수</div>
         <button className="rounded-md bg-white p-2 shadow-md">😊</button>
-        <span className="px-4">{time}</span>
+        <span className="w-12">{time}</span>
       </div>
     </div>
   );

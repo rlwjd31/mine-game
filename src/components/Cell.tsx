@@ -1,7 +1,9 @@
 import Icon from "@/components/Icon";
-import { CellType } from "@/store/mine.slice";
+import { CellType, setGameStart } from "@/store/mine.slice";
+import { RootDispatch, RootState } from "@/store/store";
 import { cn } from "@/utils/cn";
 import { ComponentProps } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 type CellProps = CellType & {
   openStyle?: string;
@@ -60,8 +62,19 @@ function OpenButton({ className, content, ...others }: ButtonProps) {
 }
 
 function CloseButton({ className, content, ...others }: ButtonProps) {
+  const { isStart } = useSelector((state: RootState) => state.minefield);
+  const dispatch = useDispatch<RootDispatch>();
+
+  const onClickOpenCell = () => {
+    // TODO: 타이머 시작(지뢰가 아닐 시)
+    if (content !== "mine" && !isStart) {
+      dispatch(setGameStart(true));
+    }
+    // TODO: 지뢰 주변까지 cell을 여는 기능 구현
+  };
+
   return (
-    <button className={className} {...others}>
+    <button className={className} onClick={onClickOpenCell} {...others}>
       {content === "flag" && (
         <div>
           <Icon type="flag" />

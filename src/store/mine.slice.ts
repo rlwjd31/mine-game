@@ -93,7 +93,7 @@ const initialState: MinefieldState = (() => {
   markMineCount(board, mines);
 
   return {
-    isStart: true,
+    isStart: false,
     levelConfig: { levelType: "beginner", ...levelConfig.beginner },
     mines: generateMines({ levelType: "beginner", ...levelConfig.beginner }),
     board,
@@ -114,8 +114,11 @@ const minefieldSlice = createSlice({
       state.mines = mines;
       state.board = board;
     },
+    setGameStart(state, action:PayloadAction<boolean>) {
+      state.isStart = action.payload;
+    },
   },
 });
 
-export const { generateMineBoard } = minefieldSlice.actions;
+export const { generateMineBoard, setGameStart } = minefieldSlice.actions;
 export default minefieldSlice.reducer;
