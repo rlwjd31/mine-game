@@ -17,6 +17,7 @@ export type Board = CellType[][];
 export type MinePosition = `${number},${number}`;
 
 type MinefieldState = {
+  isEnd: boolean;
   isStart: boolean;
   levelConfig: LevelConfig;
   mines: Set<`${number},${number}`>;
@@ -93,6 +94,7 @@ const initialState: MinefieldState = (() => {
   markMineCount(board, mines);
 
   return {
+    isEnd: false,
     isStart: false,
     levelConfig: { levelType: "beginner", ...levelConfig.beginner },
     mines: generateMines({ levelType: "beginner", ...levelConfig.beginner }),
@@ -117,12 +119,16 @@ const minefieldSlice = createSlice({
     setGameStart(state, action: PayloadAction<boolean>) {
       state.isStart = action.payload;
     },
+    setGameEnd(state, action: PayloadAction<boolean>) {
+      state.isEnd = action.payload;
+    },
     cellOpen(state, action: PayloadAction<MinePosition>) {
       const [row, col] = action.payload.split(",").map(Number);
       const cell = state.board[row][col];
 
       if (cell.content === "mine") {
         state.isStart = false;
+        state.isEnd = true;
         cell.isOpen = true;
         return;
       }
@@ -132,6 +138,6 @@ const minefieldSlice = createSlice({
   },
 });
 
-export const { generateMineBoard, setGameStart, cellOpen } =
+export const { generateMineBoard, setGameStart, setGameEnd, cellOpen } =
   minefieldSlice.actions;
 export default minefieldSlice.reducer;
