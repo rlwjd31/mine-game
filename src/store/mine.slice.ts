@@ -1,4 +1,4 @@
-import { levelConfig } from "@/constants/mineInfo";
+import { directions, levelConfig } from "@/constants/mineInfo";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type Level = "beginner" | "intermediate" | "expert" | "custom";
@@ -25,7 +25,7 @@ const generateMines = ({
   row,
   col,
   numsOfMine,
-}: LevelConfig): Set<`${number},${number}`> => {
+}: LevelConfig): Set<MinePosition> => {
   const mines = new Set<MinePosition>();
 
   while (mines.size < (numsOfMine ?? 0)) {
@@ -65,6 +65,23 @@ const generateBoard = ({
   return board;
 };
 
+const markMineCount = (board: Board, mines: Set<MinePosition>) => {
+  const [ROW, COL] = [board.length, board[0].length];
+
+  directions.forEach(([dx, dy]) => {
+    Array.from(mines).forEach((mine) => {
+      const [mineX, mineY] = mine.split(",").map(Number);
+      const [nx, ny] = [mineX + dx, mineY + dy];
+
+      if (nx >= 0 && nx < ROW && ny >= 0 && ny < COL) {
+        if (typeof board[nx][ny].content === "number") {
+          board[nx][ny].content += 1;
+        }
+      }
+    });
+  });
+};
+
 const initialState: MinefieldState = (() => {
   const mines = generateMines({
     levelType: "beginner",
@@ -78,8 +95,6 @@ const initialState: MinefieldState = (() => {
   };
 })();
 
-console.log('initialState', initialState);
-
 const minefieldSlice = createSlice({
   name: "minefield",
   initialState,
@@ -88,6 +103,7 @@ const minefieldSlice = createSlice({
       const { levelType, row, col, numsOfMine } = action.payload;
       const mines = generateMines({ ...action.payload });
       const board = generateBoard({ row, col, mines });
+      markMineCount(board, mines);
 
       state.levelConfig = { levelType, row, col, numsOfMine };
       state.mines = mines;
