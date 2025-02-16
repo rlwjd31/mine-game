@@ -11,6 +11,9 @@ export default {
         "blue-primary": "#4285f4",
         "red-primary": "#C23729",
       },
+      boxShadow: {
+        cell: "inset 1px 1px 2px 0 rgb(103 58 183)",
+      },
       backgroundImage: {
         "dot-pattern": "radial-gradient(circle, black 1px, transparent 1px)",
       },

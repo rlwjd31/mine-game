@@ -4,3 +4,14 @@ export const levelConfig = {
   expert: { row: 16, col: 32, numsOfMine: 100 },
   custom: { row: null, col: null, numsOfMine: null },
 };
+
+export const directions = [
+  [-1, -1],
+  [-1, 0],
+  [-1, 1],
+  [0, -1],
+  [0, 1],
+  [1, -1],
+  [1, 0],
+  [1, 1],
+];
