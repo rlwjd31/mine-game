@@ -1,22 +1,11 @@
 import Cell from "@/components/Cell";
-import { Level, generateMineBoard } from "@/store/mine.slice";
-import { RootDispatch, RootState } from "@/store/store";
-import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 export default function MineBody() {
-  const dispatch = useDispatch<RootDispatch>();
   const { levelConfig, mines, board } = useSelector(
     (state: RootState) => state.minefield
   );
-
-  const handleLevelChange = (
-    level: Level,
-    row: number,
-    col: number,
-    numsOfMine: number
-  ) => {
-    dispatch(generateMineBoard({ levelType: level, row, col, numsOfMine }));
-  };
 
   if (Array.isArray(mines) && mines.length === 0) {
     return <div>난이도를 설정해주세요</div>;
@@ -24,9 +13,6 @@ export default function MineBody() {
 
   return (
     <div className="flex h-full items-center justify-center">
-      <button onClick={() => handleLevelChange("custom", 5, 5, 3)}>
-        지뢰 생성
-      </button>
       <div
         className="grid size-fit border-8 border-purple-primary "
         style={{
