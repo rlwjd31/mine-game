@@ -135,7 +135,9 @@ const minefieldSlice = createSlice({
       if (cell.content === "mine") {
         state.isStart = false;
         state.isEnd = { value: true, lastPosition: action.payload };
-        cell.isOpen = true;
+        state.board.forEach((row) =>
+          row.forEach((cell) => (cell.isOpen = true))
+        );
         return;
       }
 
