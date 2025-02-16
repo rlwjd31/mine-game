@@ -1,12 +1,13 @@
 import Header from "@/components/Header";
 import Icon from "@/components/Icon";
 import Layout from "@/components/Layout";
+import MineBody from "@/components/MineBody";
 
 function App() {
   return (
     <Layout>
       <Header />
-      <div className="size-20 bg-black text-white">something</div>
+      <MineBody />
       <Icon type="flag" />
     </Layout>
   );
