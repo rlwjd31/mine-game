@@ -1,4 +1,4 @@
-import { directions, levelConfig } from "@/constants/mineInfo";
+import { directions, fourDirections, levelConfig } from "@/constants/mineInfo";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type Level = "beginner" | "intermediate" | "expert" | "custom";
@@ -19,7 +19,7 @@ export type MinePosition = `${number},${number}`;
 type MinefieldState = {
   isEnd: {
     value: boolean;
-    lastPosition: MinePosition;
+    lastPosition: MinePosition | null;
   };
   isStart: boolean;
   levelConfig: LevelConfig;
@@ -88,6 +88,41 @@ const markMineCount = (board: Board, mines: Set<MinePosition>) => {
   });
 };
 
+const openCellBFS = (startX: number, startY: number, board: Board) => {
+  const queue: [number, number][] = [[startX, startY]];
+  const visited = new Set<MinePosition>();
+
+  while (queue.length > 0) {
+    const [x, y] = queue.shift() as [number, number];
+    const currentPosition = `${x},${y}` as MinePosition;
+    const canGo =
+      !visited.has(currentPosition) &&
+      x >= 0 &&
+      y >= 0 &&
+      x < board.length &&
+      y < board[0].length &&
+      board[x][y].content !== "mine";
+
+    console.log("canGo", canGo);
+
+    if (!canGo) {
+      continue;
+    }
+
+    if (board[x][y].content !== 0) {
+      board[x][y].isOpen = true;
+      continue;
+    }
+
+    visited.add(currentPosition);
+    board[x][y].isOpen = true;
+
+    for (const [dx, dy] of fourDirections) {
+      queue.push([x + dx, y + dy]);
+    }
+  }
+};
+
 const initialState: MinefieldState = (() => {
   const mines = generateMines({
     levelType: "beginner",
@@ -97,7 +132,7 @@ const initialState: MinefieldState = (() => {
   markMineCount(board, mines);
 
   return {
-    isEnd: false,
+    isEnd: { value: false, lastPosition: null },
     isStart: false,
     levelConfig: { levelType: "beginner", ...levelConfig.beginner },
     mines: generateMines({ levelType: "beginner", ...levelConfig.beginner }),
@@ -141,7 +176,7 @@ const minefieldSlice = createSlice({
         return;
       }
 
-      cell.isOpen = true;
+      openCellBFS(row, col, state.board);
     },
   },
 });

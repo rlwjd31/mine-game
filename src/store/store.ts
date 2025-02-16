@@ -1,6 +1,8 @@
-// store.ts
+import { enableMapSet } from "immer"; // Immer에서 Set 지원 활성화
 import { configureStore } from "@reduxjs/toolkit";
 import minefieldReducer from "@/store/mine.slice"; // 상대 경로가 정확한지 확인!
+
+enableMapSet()
 
 export const store = configureStore({
   reducer: {
