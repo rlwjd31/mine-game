@@ -1,5 +1,5 @@
 import Icon from "@/components/Icon";
-import { CellType, setGameStart } from "@/store/mine.slice";
+import { cellOpen, CellType, setGameStart } from "@/store/mine.slice";
 import { RootDispatch, RootState } from "@/store/store";
 import { cn } from "@/utils/cn";
 import { ComponentProps } from "react";
@@ -28,6 +28,7 @@ export default function Cell({
         openStyle
       )}
       content={content}
+      position={position}
       {...others}
     />
   ) : (
@@ -38,6 +39,7 @@ export default function Cell({
         closeStyle
       )}
       content={content}
+      position={position}
       {...others}
     />
   );
@@ -46,9 +48,10 @@ export default function Cell({
 type ButtonProps = {
   className?: string;
   content: CellType["content"];
+  position: CellType["position"];
 } & ComponentProps<"button">;
 
-function OpenButton({ className, content, ...others }: ButtonProps) {
+function OpenButton({ className, content, position, ...others }: ButtonProps) {
   return (
     <button className={className} {...others}>
       {typeof content === "number" && (
@@ -61,15 +64,17 @@ function OpenButton({ className, content, ...others }: ButtonProps) {
   );
 }
 
-function CloseButton({ className, content, ...others }: ButtonProps) {
+function CloseButton({ className, content, position, ...others }: ButtonProps) {
   const { isStart } = useSelector((state: RootState) => state.minefield);
   const dispatch = useDispatch<RootDispatch>();
 
   const onClickOpenCell = () => {
-    // TODO: 타이머 시작(지뢰가 아닐 시)
     if (content !== "mine" && !isStart) {
       dispatch(setGameStart(true));
     }
+
+    dispatch(cellOpen(position));
+
     // TODO: 지뢰 주변까지 cell을 여는 기능 구현
   };
 

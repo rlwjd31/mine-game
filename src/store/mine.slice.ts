@@ -114,11 +114,24 @@ const minefieldSlice = createSlice({
       state.mines = mines;
       state.board = board;
     },
-    setGameStart(state, action:PayloadAction<boolean>) {
+    setGameStart(state, action: PayloadAction<boolean>) {
       state.isStart = action.payload;
+    },
+    cellOpen(state, action: PayloadAction<MinePosition>) {
+      const [row, col] = action.payload.split(",").map(Number);
+      const cell = state.board[row][col];
+
+      if (cell.content === "mine") {
+        state.isStart = false;
+        cell.isOpen = true;
+        return;
+      }
+
+      cell.isOpen = true;
     },
   },
 });
 
-export const { generateMineBoard, setGameStart } = minefieldSlice.actions;
+export const { generateMineBoard, setGameStart, cellOpen } =
+  minefieldSlice.actions;
 export default minefieldSlice.reducer;
