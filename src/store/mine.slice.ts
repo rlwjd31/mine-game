@@ -17,6 +17,7 @@ export type Board = CellType[][];
 export type MinePosition = `${number},${number}`;
 
 type MinefieldState = {
+  isStart: boolean;
   levelConfig: LevelConfig;
   mines: Set<`${number},${number}`>;
   board: Board;
@@ -90,7 +91,9 @@ const initialState: MinefieldState = (() => {
   });
   const board = generateBoard({ row: 8, col: 8, mines });
   markMineCount(board, mines);
+
   return {
+    isStart: true,
     levelConfig: { levelType: "beginner", ...levelConfig.beginner },
     mines: generateMines({ levelType: "beginner", ...levelConfig.beginner }),
     board,

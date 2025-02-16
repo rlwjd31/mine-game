@@ -1,12 +1,27 @@
 import { levelConfig } from "@/constants/mineInfo";
 import { generateMineBoard, LevelConfig } from "@/store/mine.slice";
-import { RootDispatch } from "@/store/store";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { RootDispatch, RootState } from "@/store/store";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Header() {
   const [isClicked, setIsClicked] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [time, setTime] = useState(0);
+
+  const { isStart } = useSelector((state: RootState) => state.minefield);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+
+    if (isStart) {
+      timer = setInterval(() => {
+        setTime((prevTime) => prevTime + 1);
+      }, 1000);
+    }
+
+    return () => clearInterval(timer);
+  }, [isStart]);
 
   return (
     <div className="relative flex w-full flex-col gap-4 bg-purple-primary text-white">
@@ -26,7 +41,7 @@ export default function Header() {
       <div className="flex w-full items-center justify-between text-3xl">
         <div>깃발 개수</div>
         <button className="rounded-md bg-white p-2 shadow-md">😊</button>
-        <div>시간</div>
+        <span className="px-4">{time}</span>
       </div>
     </div>
   );
