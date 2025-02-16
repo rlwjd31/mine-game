@@ -16,47 +16,57 @@ export default function Cell({
   closeStyle,
   ...others
 }: CellProps) {
-  console.log("content", content, isOpen, position);
-
   const defaultStyle = "flex size-full items-center justify-center shadow-cell";
-  // isOpen = true;
 
-  console.log("content", content, isOpen, position);
-
-  if (!isOpen) {
-    return (
-      <button
-        className={cn(
-          defaultStyle,
-          "relative bg-purple-primary/50  hover:bg-purple-primary/30 cursor-pointer",
-          closeStyle
-        )}
-        {...others}
-      >
-        {content === "flag" && (
-          <div>
-            <Icon type="flag" />
-          </div>
-        )}
-      </button>
-    );
-  }
-
-  return (
-    <button
+  return isOpen ? (
+    <OpenButton
       className={cn(
         defaultStyle,
         "bg-transparent pointer-events-none",
         openStyle
       )}
+      content={content}
       {...others}
-    >
+    />
+  ) : (
+    <CloseButton
+      className={cn(
+        defaultStyle,
+        "relative bg-purple-primary/50  hover:bg-purple-primary/30 cursor-pointer",
+        closeStyle
+      )}
+      content={content}
+      {...others}
+    />
+  );
+}
+
+type ButtonProps = {
+  className?: string;
+  content: CellType["content"];
+} & ComponentProps<"button">;
+
+function OpenButton({ className, content, ...others }: ButtonProps) {
+  return (
+    <button className={className} {...others}>
       {typeof content === "number" && (
-        <span className="text-xl font-bold text-center">
+        <span className="text-center text-xl font-bold">
           {content === 0 ? "" : content}
         </span>
       )}
       {content === "mine" && <Icon type="mine" />}
+    </button>
+  );
+}
+
+function CloseButton({ className, content, ...others }: ButtonProps) {
+  return (
+    <button className={className} {...others}>
+      {content === "flag" && (
+        <div>
+          <Icon type="flag" />
+        </div>
+      )}
     </button>
   );
 }
