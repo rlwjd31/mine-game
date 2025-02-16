@@ -17,7 +17,10 @@ export type Board = CellType[][];
 export type MinePosition = `${number},${number}`;
 
 type MinefieldState = {
-  isEnd: boolean;
+  isEnd: {
+    value: boolean;
+    lastPosition: MinePosition;
+  };
   isStart: boolean;
   levelConfig: LevelConfig;
   mines: Set<`${number},${number}`>;
@@ -119,7 +122,10 @@ const minefieldSlice = createSlice({
     setGameStart(state, action: PayloadAction<boolean>) {
       state.isStart = action.payload;
     },
-    setGameEnd(state, action: PayloadAction<boolean>) {
+    setGameEnd(
+      state,
+      action: PayloadAction<{ value: boolean; lastPosition: MinePosition }>
+    ) {
       state.isEnd = action.payload;
     },
     cellOpen(state, action: PayloadAction<MinePosition>) {
@@ -128,7 +134,7 @@ const minefieldSlice = createSlice({
 
       if (cell.content === "mine") {
         state.isStart = false;
-        state.isEnd = true;
+        state.isEnd = { value: true, lastPosition: action.payload };
         cell.isOpen = true;
         return;
       }

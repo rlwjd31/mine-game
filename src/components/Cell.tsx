@@ -1,9 +1,5 @@
 import Icon from "@/components/Icon";
-import {
-  cellOpen,
-  CellType,
-  setGameStart,
-} from "@/store/mine.slice";
+import { cellOpen, CellType, setGameStart } from "@/store/mine.slice";
 import { RootDispatch, RootState } from "@/store/store";
 import { cn } from "@/utils/cn";
 import { ComponentProps } from "react";
@@ -56,10 +52,19 @@ type ButtonProps = {
 } & ComponentProps<"button">;
 
 function OpenButton({ className, content, position, ...others }: ButtonProps) {
+  const { isEnd: isGameEnd } = useSelector(
+    (state: RootState) => state.minefield
+  );
   return (
-    <button className={cn(className)} {...others}>
+    <button
+      className={cn(
+        className,
+        isGameEnd.value && isGameEnd.lastPosition === position && "bg-red-300"
+      )}
+      {...others}
+    >
       {typeof content === "number" && (
-        <span className="text-xl font-bold text-center">
+        <span className="text-center text-xl font-bold">
           {content === 0 ? "" : content}
         </span>
       )}
@@ -86,8 +91,8 @@ function CloseButton({ className, content, position, ...others }: ButtonProps) {
 
   return (
     <button
-      className={cn(className, isGameEnd && "pointer-events-none")}
-      onClick={isGameEnd ? () => {} : onClickOpenCell}
+      className={cn(className, isGameEnd.value && "pointer-events-none")}
+      onClick={isGameEnd.value ? () => {} : onClickOpenCell}
       {...others}
     >
       {content === "flag" && (
