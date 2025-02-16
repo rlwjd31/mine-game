@@ -1,5 +1,4 @@
 import Header from "@/components/Header";
-import Icon from "@/components/Icon";
 import Layout from "@/components/Layout";
 import MineBody from "@/components/MineBody";
 import { store } from "@/store/store";
@@ -11,7 +10,6 @@ function App() {
       <Layout>
         <Header />
         <MineBody />
-        <Icon type="flag" />
       </Layout>
     </Provider>
   );

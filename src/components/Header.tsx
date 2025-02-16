@@ -1,12 +1,54 @@
+import { levelConfig } from "@/constants/mineInfo";
+import { generateMineBoard } from "@/store/mine.slice";
+import { RootDispatch } from "@/store/store";
+import { useDispatch } from "react-redux";
+
 export default function Header() {
+  const dispatch = useDispatch<RootDispatch>();
   return (
     <div className="flex w-full flex-col gap-4 bg-purple-primary text-white">
       <div className="relative">
         <button className="cursor-pointer text-xl">Game</button>
         <div className="absolute left-0 top-0 flex translate-y-10 flex-col gap-2 bg-purple-500">
-          <button className="px-4 py-2">Beginner</button>
-          <button className="px-4 py-2">Intermediate</button>
-          <button className="px-4 py-2">Expert</button>
+          <button
+            className="px-4 py-2"
+            onClick={() =>
+              dispatch(
+                generateMineBoard({
+                  levelType: "beginner",
+                  ...levelConfig.beginner,
+                })
+              )
+            }
+          >
+            Beginner
+          </button>
+          <button
+            className="px-4 py-2"
+            onClick={() =>
+              dispatch(
+                generateMineBoard({
+                  levelType: "intermediate",
+                  ...levelConfig.intermediate,
+                })
+              )
+            }
+          >
+            Intermediate
+          </button>
+          <button
+            className="px-4 py-2"
+            onClick={() =>
+              dispatch(
+                generateMineBoard({
+                  levelType: "expert",
+                  ...levelConfig.expert,
+                })
+              )
+            }
+          >
+            Expert
+          </button>
           <button className="px-4 py-2">Custom</button>
         </div>
       </div>
@@ -19,3 +61,14 @@ export default function Header() {
     </div>
   );
 }
+
+// onClick={() =>
+//   dispatch(
+//     generateMineBoard({
+//       levelType: "custom",
+//       row: ,
+//       col: ,
+//       numsOfMine ,
+//     })
+//   )
+// }
