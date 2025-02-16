@@ -8,14 +8,16 @@ export type LevelConfig = {
   col: number;
   numsOfMine: number;
 };
-export type Board = {
+export type CellType = {
   content: "flag" | "mine" | number;
   isOpen: boolean;
   position: MinePosition;
-}[][];
+};
+export type Board = CellType[][];
 export type MinePosition = `${number},${number}`;
 
 type MinefieldState = {
+  isStart: boolean;
   levelConfig: LevelConfig;
   mines: Set<`${number},${number}`>;
   board: Board;
@@ -88,7 +90,10 @@ const initialState: MinefieldState = (() => {
     ...levelConfig.beginner,
   });
   const board = generateBoard({ row: 8, col: 8, mines });
+  markMineCount(board, mines);
+
   return {
+    isStart: true,
     levelConfig: { levelType: "beginner", ...levelConfig.beginner },
     mines: generateMines({ levelType: "beginner", ...levelConfig.beginner }),
     board,
