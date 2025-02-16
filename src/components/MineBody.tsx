@@ -1,4 +1,4 @@
-import { Level, setLevel } from "@/store/mine.slice";
+import { Level, generateMineBoard } from "@/store/mine.slice";
 import { RootDispatch, RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -19,7 +19,7 @@ export default function MineBody() {
     numsOfMine: number
   ) => {
     console.log("row", row, "col", col, "numsOfMine", numsOfMine);
-    dispatch(setLevel({ levelType: level, row, col, numsOfMine }));
+    dispatch(generateMineBoard({ levelType: level, row, col, numsOfMine }));
   };
 
   const [ROW, COL] = [levelConfig.row, levelConfig.col];
@@ -34,12 +34,12 @@ export default function MineBody() {
   // 또한, 한 Cell의 state는 {isOpen, isMine, isFlag, position, aroundMineCount}으로 구성되어야 함
   // Cell은 isOpen일 때 style 분기처리 값은 isFlag, isMine, aroundMineCount로 처리, position은 그냥 가지고 있는 값
   return (
-    <div className="flex h-full items-center justify-center">
+    <div className="flex items-center justify-center h-full">
       <button onClick={() => handleLevelChange("custom", 5, 5, 3)}>
         지뢰 생성
       </button>
       <div
-        className="grid size-fit border border-black "
+        className="grid border border-black size-fit "
         style={{
           gridTemplateRows: `repeat(${levelConfig.row}, 3rem)`, // 행 개수와 크기 설정
           gridTemplateColumns: `repeat(${levelConfig.col}, 3rem)`, // 열 개수와 크기 설정
