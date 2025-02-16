@@ -1,4 +1,4 @@
-import { levelConfig } from "@/constants/level";
+import { levelConfig } from "@/constants/mineInfo";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type Level = "beginner" | "intermediate" | "expert" | "custom";
