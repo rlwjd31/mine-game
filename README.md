@@ -2,6 +2,7 @@
 
 ```shell
 $) yarn install
+$) yarn switch dev
 $) yarn dev
 ```
 
