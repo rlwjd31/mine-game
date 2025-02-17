@@ -17,6 +17,7 @@ export type Board = CellType[][];
 export type MinePosition = `${number},${number}`;
 
 type MinefieldState = {
+  isFirstClick: boolean;
   isEnd: {
     value: boolean;
     lastPosition: MinePosition | null;
@@ -132,6 +133,7 @@ const initialState: MinefieldState = (() => {
   markMineCount(board, mines);
 
   return {
+    isFirstClick: true,
     isEnd: { value: false, lastPosition: null },
     isStart: false,
     levelConfig: { levelType: "beginner", ...levelConfig.beginner },
@@ -166,6 +168,27 @@ const minefieldSlice = createSlice({
     cellOpen(state, action: PayloadAction<MinePosition>) {
       const [row, col] = action.payload.split(",").map(Number);
       const cell = state.board[row][col];
+
+      if (state.isFirstClick && cell.content === "mine") {
+        const { row, col } = state.levelConfig;
+        let mines = generateMines({
+          ...state.levelConfig,
+        });
+
+        while (!mines.has(action.payload)) {
+          mines = generateMines({
+            ...state.levelConfig,
+          });
+        }
+        
+        state.isFirstClick = false;
+        const board = generateBoard({ row, col, mines });
+        markMineCount(board, mines);
+
+        return;
+      }
+
+      state.isFirstClick = true;
 
       if (cell.content === "mine") {
         state.isStart = false;
